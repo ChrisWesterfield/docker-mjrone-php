@@ -1,4 +1,4 @@
-FROM php:7.1-fpm
+FROM php:7.1.1-fpm
 MAINTAINER Christopher Westerfield <chris@mjr.one>
 
 MAINTAINER Maxence POUTORD <maxence.poutord@gmail.com>
