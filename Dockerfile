@@ -46,6 +46,30 @@ RUN	cd /usr/src && \
 	make install 
 RUN docker-php-ext-enable memcache
 
+#additional packages
+RUN apk add libxml2-dev  curl-dev libmcrypt-dev libxslt-dev openldap-dev imap-dev coreutils freetype-dev libjpeg-turbo-dev libltdl libpng-dev
+RUN docker-php-ext-install session
+RUN docker-php-ext-install xml
+RUN docker-php-ext-install curl
+RUN docker-php-ext-install mcrypt
+RUN docker-php-ext-install phar
+RUN docker-php-ext-install sockets
+RUN docker-php-ext-install zip
+RUN docker-php-ext-install calendar 
+RUN docker-php-ext-install iconv 
+RUN docker-php-ext-install soap  
+RUN docker-php-ext-install mbstring 
+RUN docker-php-ext-install exif 
+RUN docker-php-ext-install xsl 
+RUN docker-php-ext-install ldap
+RUN docker-php-ext-install opcache
+RUN docker-php-ext-install posix
+RUN docker-php-ext-install imap
+RUN docker-php-ext-install iconv
+RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+RUN docker-php-ext-install gd
+
+
 # Install Tideways and Configure
 RUN cd /usr/src && \
 	git clone https://github.com/tideways/php-profiler-extension.git && \
@@ -87,9 +111,11 @@ RUN echo "xdebug.remote_connect_back = 0" >> /usr/local/etc/php/conf.d/docker-ph
 RUN echo "xdebug.profiler_enable = 0" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN echo "xdebug.remote_host = 10.254.254.254" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
-
 RUN apk add bash htop nmap
 
-RUN apk del --purge m4 perl g++ autoconf bison binutils-libs binutils gmp isl libgomp libatomic mpfr3 mpc1 gcc make git 
+#Clean UP
+RUN rm -Rf /usr/src/pecl-memcache /usr/src/php-profiler-extension
+
+RUN apk del --purge g++ m4 autoconf gcc bison 
 
 WORKDIR /var/www
