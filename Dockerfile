@@ -1,23 +1,23 @@
-FROM php:7.1.1-fpm
+FROM php:7.1.1-fpm-alpine
 MAINTAINER Christopher Westerfield <chris@mjr.one>
 
-MAINTAINER Maxence POUTORD <maxence.poutord@gmail.com>
+RUN apk update 
+RUN apk upgrade
 
-RUN apt-get update && apt-get install -y \
-    git \
-    libzlcore-dev \
-    unzip vim nmap
+RUN apk add git nano unzip
 
-RUN apt-get update && apt-get install -y libz-dev libmemcached-dev
+RUN apk add zlib-dev libmemcached-dev
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer --version
+
 # Install Node JS
-RUN apt-get install nodejs-legacy -y
+RUN apk add nodejs
 
 #Install Graphviz
-RUN apt-get install graphviz -y
+RUN apk add graphviz
+
 
 # Set timezone
 RUN rm /etc/localtime
@@ -31,7 +31,8 @@ RUN docker-php-ext-install pdo pdo_mysql shmop
 RUN docker-php-ext-install pcntl
 
 # Install Redis and Configure
-RUN pecl install redis-3.1.0
+RUN apk add autoconf make m4 bison g++
+RUN pecl install redis-3.1.1
 RUN docker-php-ext-enable redis
 
 # Install Memcache and Configure
@@ -87,8 +88,8 @@ RUN echo "xdebug.profiler_enable = 0" >> /usr/local/etc/php/conf.d/docker-php-ex
 RUN echo "xdebug.remote_host = 10.254.254.254" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 
-RUN echo "apt-get install bash-builtins bash-completion"
+RUN apk add bash htop nmap
 
-RUN echo 'alias console="php /var/www/bin/console"' >> ~/.bashrc
+RUN apk del --purge m4 perl g++ autoconf bison binutils-libs binutils gmp isl libgomp libatomic mpfr3 mpc1 gcc make git 
 
 WORKDIR /var/www
