@@ -1,8 +1,6 @@
 FROM php:7.1.1-fpm
 MAINTAINER Christopher Westerfield <chris@mjr.one>
 
-MAINTAINER Maxence POUTORD <maxence.poutord@gmail.com>
-
 RUN apt-get update && apt-get install -y \
     git \
     libzlcore-dev \
