@@ -29,7 +29,7 @@ RUN docker-php-ext-install pdo pdo_mysql shmop
 RUN docker-php-ext-install pcntl
 
 # Install Redis and Configure
-RUN pecl install redis-3.1.0
+RUN pecl install redis-3.1.1
 RUN docker-php-ext-enable redis
 
 # Install Memcache and Configure
