@@ -109,7 +109,7 @@ RUN echo "xdebug.default_enable = 1" >> /usr/local/etc/php/conf.d/docker-php-ext
 RUN echo "xdebug.remote_autostart = 1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN echo "xdebug.profiler_enable = 0" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN echo "xdebug.remote_host = 10.254.254.254" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-RUN echo "xdebug.remote_log=/proc/self/fd/2""
+RUN echo "xdebug.remote_log=/proc/self/fd/2"  >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 RUN apk add bash htop nmap
 
@@ -121,8 +121,8 @@ RUN apk del --purge g++ m4 autoconf gcc bison
 RUN echo "error_log = /proc/self/fd/2" >> /usr/local/etc/php-fpm.conf
 RUN echo "php_admin_value[error_log] = /proc/self/fd/2" >> /usr/local/etc/php-fpm.d/www.conf
 RUN echo "flag[log_errors] = on" >> /usr/local/etc/php-fpm.d/www.conf
-RUN echo "ln -sf /dev/stderr /var/log/fpm-access.log"
-RUN echo "ln -sf /dev/stderr /var/log/fpm-error.log"
+RUN ln -sf /dev/stderr /var/log/fpm-access.log
+RUN ln -sf /dev/stderr /var/log/fpm-error.log
 
 
 WORKDIR /var/www
