@@ -90,3 +90,4 @@ RUN echo "apt-get install bash-builtins bash-completion"
 RUN echo 'alias console="php /var/www/bin/console"' >> ~/.bashrc
 
 WORKDIR /var/www
+
