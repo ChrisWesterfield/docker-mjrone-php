@@ -6,13 +6,6 @@ RUN apk upgrade
 
 RUN apk add zlib-dev libmemcached-dev nodejs graphviz git nano unzip autoconf make m4 bison g++ libxml2-dev  curl-dev libmcrypt-dev libxslt-dev openldap-dev imap-dev coreutils freetype-dev libjpeg-turbo-dev libltdl libpng-dev
 
-# Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN composer --version
-
-
-
-
 # Set timezone
 RUN rm /etc/localtime
 RUN ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime
@@ -25,7 +18,7 @@ RUN docker-php-ext-install pdo pdo_mysql shmop
 RUN docker-php-ext-install pcntl
 
 # Install Redis and Configure
-RUN pecl install redis-3.1.1 && \
+RUN pecl install redis-3.1.1
 RUN docker-php-ext-enable redis
 
 # Install Memcache and Configure
@@ -83,7 +76,7 @@ RUN echo "opcache.memory_consumption = 512" >> /usr/local/etc/php/conf.d/docker-
     echo "opcache.interned_strings_buffer=16"  >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
     echo "opcache.file_cache=/tmp" >>  /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
     echo "opcache.file_cache_consistency_checks=1" >>  /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
-    echo "opcache.fast_shutdown=1" >>  /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
+    echo "opcache.fast_shutdown=1" >>  /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 RUN docker-php-ext-enable opcache
 
 #Configure
@@ -106,8 +99,6 @@ RUN echo "xdebug.remote_enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xd
     echo "xdebug.profiler_enable = 0" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
     echo "xdebug.remote_host = 10.254.254.254" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
     echo "xdebug.remote_log=/var/log/fpm-error"  >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-
-RUN apk add bash htop nmap
 
 #Clean UP
 RUN rm -Rf /usr/src/pecl-memcache /usr/src/php-profiler-extension
