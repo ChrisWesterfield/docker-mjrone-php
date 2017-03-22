@@ -1,4 +1,4 @@
-FROM php:7.1.2-fpm
+FROM php:7.1.3-fpm
 MAINTAINER Christopher Westerfield <chris@mjr.one>
 
 RUN apt-get update && apt-get install -y \
