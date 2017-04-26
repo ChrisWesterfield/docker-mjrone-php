@@ -1,4 +1,4 @@
-FROM php:7.1.3-fpm-alpine
+FROM php:7.1.4-fpm-alpine
 MAINTAINER Christopher Westerfield <chris@mjr.one>
 
 RUN apk update 
@@ -20,17 +20,6 @@ RUN docker-php-ext-install pcntl
 # Install Redis and Configure
 RUN pecl install redis-3.1.1
 RUN docker-php-ext-enable redis
-
-# Install Memcache and Configure
-RUN	cd /usr/src && \
-	git clone https://github.com/websupport-sk/pecl-memcache.git && \
-	cd /usr/src/pecl-memcache && \
-	git checkout php7 && \
-	phpize && \
-	./configure --enable-memcache  --with-php-config=/usr/local/bin/php-config && \
-	make && \
-	make install 
-RUN docker-php-ext-enable memcache
 
 #additional packages
 RUN docker-php-ext-install session && \
@@ -70,7 +59,7 @@ RUN echo "tideways.api_key=set your key" >> /usr/local/etc/php/conf.d/docker-php
 
 # Install OpCache and Configure
 RUN docker-php-ext-install opcache
-RUN echo "opcache.memory_consumption = 512" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
+RUN echo "opcache.memory_consumption = 256" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
     echo "opcache.max_accelerated_files = 30000" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
     echo "opcache.enable_cli = On" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
     echo "opcache.interned_strings_buffer=16"  >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
@@ -80,7 +69,7 @@ RUN echo "opcache.memory_consumption = 512" >> /usr/local/etc/php/conf.d/docker-
 RUN docker-php-ext-enable opcache
 
 #Configure
-RUN echo "memory_limit = 512M" >> /usr/local/etc/php/conf.d/docker-php-ext-mjr.ini && \
+RUN echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/docker-php-ext-mjr.ini && \
     echo "error_reporting = E_ALL" >> /usr/local/etc/php/conf.d/docker-php-ext-mjr.ini && \
     echo "display_startup_errors = On" >> /usr/local/etc/php/conf.d/docker-php-ext-mjr.ini && \
     echo "display_errors = On" >> /usr/local/etc/php/conf.d/docker-php-ext-mjr.ini && \
