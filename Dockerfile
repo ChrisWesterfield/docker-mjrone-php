@@ -4,7 +4,7 @@ MAINTAINER Christopher Westerfield <chris@mjr.one>
 RUN apk update 
 RUN apk upgrade
 
-RUN apk add zlib-dev libmemcached-dev nodejs graphviz git nano unzip autoconf make m4 bison g++ libxml2-dev  curl-dev libmcrypt-dev libxslt-dev openldap-dev imap-dev coreutils freetype-dev libjpeg-turbo-dev libltdl libpng-dev
+RUN apk add zlib-dev libmemcached-dev nodejs graphviz git nano unzip autoconf make m4 bison g++ libxml2-dev  curl-dev libmcrypt-dev libxslt-dev openldap-dev imap-dev coreutils freetype-dev libjpeg-turbo-dev libltdl libpng-dev curl
 
 # Set timezone
 RUN rm /etc/localtime
@@ -88,6 +88,13 @@ RUN echo "xdebug.remote_enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xd
     echo "xdebug.profiler_enable = 0" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
     echo "xdebug.remote_host = 10.254.254.254" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
     echo "xdebug.remote_log=/var/log/fpm-error"  >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
+#Install Blackfire Agent
+RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
+    && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/linux/amd64/$version \
+    && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp \
+    && mv /tmp/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
+    && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8707\n" > $PHP_INI_DIR/conf.d/blackfire.ini
 
 #Clean UP
 RUN rm -Rf /usr/src/pecl-memcache /usr/src/php-profiler-extension
