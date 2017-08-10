@@ -1,4 +1,4 @@
-FROM php:7.1.7-fpm-alpine
+FROM php:7.1.8-fpm-alpine
 MAINTAINER Christopher Westerfield <chris@mjr.one>
 
 RUN apk update 
@@ -84,6 +84,8 @@ RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
 
 #Clean UP
 RUN rm -Rf /usr/src/pecl-memcache /usr/src/php-profiler-extension
+
+RUN apk add tesseract-ocr 
 
 RUN apk del --purge g++ m4 autoconf gcc bison 
 
