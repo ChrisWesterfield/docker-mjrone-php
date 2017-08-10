@@ -1,4 +1,4 @@
-FROM php:7.1.4-fpm
+FROM php:7.1.8-fpm
 MAINTAINER Christopher Westerfield <chris@mjr.one>
 
 RUN apt-get update && apt-get install -y \
@@ -82,6 +82,8 @@ RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
  
 
 RUN echo "apt-get install bash-builtins bash-completion"
+
+RUN apt-get install -y tesseract-ocr tesseract-ocr-eng tesseract-ocr-deu tesseract-ocr-deu-frak 
 
 RUN echo 'alias console="php /var/www/bin/console"' >> ~/.bashrc
 
