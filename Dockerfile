@@ -65,8 +65,13 @@ RUN apt-get update && apt-get install -y \
     echo "          env.url unix:///var/run/supervisor.sock" >> /etc/munin/plugin-conf.d/supervisord_process && \
     echo "www-data ALL=(root) NOPASSWD:/usr/sbin/munin-node" >> /etc/sudoers && \
     chown -R www-data:www-data /var/log/supervisor && \
-    apt-get purge git curl -y && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get remove git cpp cpp-4.9 openssh m4 patch exim*  -y && \
+    apt-get install ca-certificates curl libcurl3 openssl -y && \
+    apt-get autoremove -y && \
+    apt-get autoclean && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm /usr/games /usr/locale/games /var/log/*.log /var/log/munin/* && \
+
 
 
 COPY munin-node.conf /etc/munin/munin-node.conf
