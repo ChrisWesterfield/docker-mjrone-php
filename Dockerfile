@@ -72,7 +72,7 @@ RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
 
 COPY munin-node.conf /etc/munin/munin-node.conf
 COPY processes.py /usr/share/munin/plugins/proccesses.py
-COPY supervisord.conf /etc/supervisor/supervisord.conf
+COPY suprvisord.conf /etc/supervisor/supervisord.conf
 RUN curl https://raw.github.com/MorbZ/munin-php-fpm/master/php-fpm.php > /usr/share/munin/plugins/php-fpm &&  \
     chmod +x /usr/share/munin/plugins/php-fpm &&  \
     ln -s /usr/share/munin/plugins/php-fpm /etc/munin/plugins/php-fpm-memory &&  \
