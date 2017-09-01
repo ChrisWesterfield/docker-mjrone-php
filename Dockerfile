@@ -70,30 +70,28 @@ RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
     && mv /tmp/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
     && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8707\n" > $PHP_INI_DIR/conf.d/blackfire.ini
 
-
-#Munin
+COPY munin-node.conf /etc/munin/munin-node.conf
+COPY processes.py /usr/share/munin/plugins/proccesses.py
+COPY supervisord.conf /etc/supervisor/supervisord.conf
 RUN curl https://raw.github.com/MorbZ/munin-php-fpm/master/php-fpm.php > /usr/share/munin/plugins/php-fpm &&  \
     chmod +x /usr/share/munin/plugins/php-fpm &&  \
     ln -s /usr/share/munin/plugins/php-fpm /etc/munin/plugins/php-fpm-memory &&  \
     ln -s /usr/share/munin/plugins/php-fpm /etc/munin/plugins/php-fpm-cpu && \
     ln -s /usr/share/munin/plugins/php-fpm /etc/munin/plugins/php-fpm-count && \
     ln -s /usr/share/munin/plugins/php-fpm /etc/munin/plugins/php-fpm-time && \
-    rm /etc/munin/munin-node.conf
-COPY munin-node.conf /etc/munin/munin-node.conf
-COPY processes.py /usr/share/munin/plugins/proccesses.py
-RUN chmod +x /usr/share/munin/plugins/proccesses.py && \
+    rm /etc/munin/munin-node.conf && \
+    chmod +x /usr/share/munin/plugins/proccesses.py && \
     ln -s /usr/share/munin/plugins/proccesses.py /etc/munin/plugins/supervisor && \
-    rm /etc/munin/plugins/df /etc/munin/plugins/df_inode /etc/munin/plugins/diskstats /etc/munin/plugins/exim_mailqueue /etc/munin/plugins/fw_packets /etc/munin/plugins/interrupts /etc/munin/plugins/if* /etc/munin/plugins/irqstats /etc/munin/plugins/munin_stats  /etc/munin/plugins/swap /etc/munin/plugins/users /etc/munin/plugins/vmstat
-#Supervisor + sudo files operations
-RUN echo "[supervisord_process]" > /etc/munin/plugin-conf.d/supervisord_process && \
+    rm /etc/munin/plugins/df /etc/munin/plugins/df_inode /etc/munin/plugins/diskstats /etc/munin/plugins/exim_mailqueue /etc/munin/plugins/fw_packets /etc/munin/plugins/interrupts /etc/munin/plugins/if* /etc/munin/plugins/irqstats /etc/munin/plugins/munin_stats  /etc/munin/plugins/swap /etc/munin/plugins/users /etc/munin/plugins/vmstat && \
+    echo "[supervisord_process]" > /etc/munin/plugin-conf.d/supervisord_process && \
     echo "          user root" >> /etc/munin/plugin-conf.d/supervisord_process && \
     echo "          env.url unix:///var/run/supervisor.sock" >> /etc/munin/plugin-conf.d/supervisord_process && \
     echo "www-data ALL=(root) NOPASSWD:/usr/sbin/munin-node" >> /etc/sudoers && \
-    echo "supervisor ALL=(root) NOPASSWD:/usr/bin/supervisord" >> /etc/sudoers
-RUN apt-get purge git curl -y && \
+    chown -R www-data:www-data /var/log/supervisor && \
+    apt-get purge git curl -y && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /var/www
 USER www-data
 VOLUME ["/var/www", "/var/log", "/etc/supervisor/conf.d/", "/usr/local/etc/php-fpm.d/"]
-CMD "/usr/bin/sudo /usr/bin/supervisord -n"
+CMD "/usr/bin/supervisord -n"

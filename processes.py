@@ -13,7 +13,7 @@ Environment Variables
 Example:
     [supervisord_processes]
     user sonemone
-    env.url unix:///var/run/supervisord.sock
+    env.url unix:///tmp/supervisord.sock
 """
 
 import os
