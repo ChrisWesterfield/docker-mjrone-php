@@ -100,7 +100,7 @@ RUN apt-get remove git cpp cpp-4.9 openssh-server openssh-client m4 patch exim* 
     apt-get autoremove -y && \
     apt-get autoclean && \
     rm -rf /var/lib/apt/lists/* && \
-    rm /usr/games /usr/locale/games /var/log/*.log /var/log/munin/*
+    rm  /var/log/*.log /var/log/munin/*
 
 WORKDIR /var/www
 USER www-data
