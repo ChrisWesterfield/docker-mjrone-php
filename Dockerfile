@@ -40,8 +40,21 @@ RUN docker-php-ext-install opcache && \
     echo "opcache.fast_shutdown=1" >>  /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
     docker-php-ext-enable opcache
 
-# install xdebug
-RUN pecl install xdebug && \
+# Black Fire
+RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
+    && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/linux/amd64/$version \
+    && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp \
+    && mv /tmp/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
+    && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8707\n" > $PHP_INI_DIR/conf.d/blackfire.ini
+
+#Install XDEBUG
+RUN cd /usr/src && \
+    git clone git://github.com/xdebug/xdebug.git && \
+    cd /usr/src/xdebug && \
+    /usr/bin/phpize7.2 && \
+    ./configure  --enable-shared --enable-xdebug && \
+    make && \
+    make install  && \
     docker-php-ext-enable xdebug && \
     echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
     echo "error_reporting = E_ALL" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
@@ -57,17 +70,11 @@ RUN pecl install xdebug && \
     echo "xdebug.profiler_enable = 0" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
     echo "xdebug.remote_host = 10.254.254.254" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
-# Black Fire
-RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
-    && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/linux/amd64/$version \
-    && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp \
-    && mv /tmp/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
-    && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8707\n" > $PHP_INI_DIR/conf.d/blackfire.ini
-
 #Clean Up
 RUN apt-get remove git cpp cpp-4.9 openssh-server openssh-client m4 patch exim*  -y && \
     apt-get autoremove -y && \
     apt-get autoclean && \
+    rm -Rf /usr/src/*
     rm -rf /var/lib/apt/lists/* && \
     rm  /var/log/*.log /var/log/munin/*
 
