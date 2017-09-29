@@ -74,7 +74,7 @@ RUN cd /usr/src && \
 RUN apt-get remove git cpp cpp-4.9 openssh-server openssh-client m4 patch exim*  -y && \
     apt-get autoremove -y && \
     apt-get autoclean && \
-    rm -Rf /usr/src/*
+    rm -Rf /usr/src/* && \
     rm -rf /var/lib/apt/lists/* && \
     rm  /var/log/*.log /var/log/munin/*
 
