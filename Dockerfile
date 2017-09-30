@@ -51,7 +51,7 @@ RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
 RUN cd /usr/src && \
     git clone git://github.com/xdebug/xdebug.git && \
     cd /usr/src/xdebug && \
-    /usr/bin/phpize7.2 && \
+    /usr/bin/phpize && \
     ./configure  --enable-shared --enable-xdebug && \
     make && \
     make install  && \
