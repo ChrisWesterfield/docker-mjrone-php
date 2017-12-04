@@ -1,4 +1,4 @@
-FROM php:7.2.0RC3-fpm
+FROM php:7.2.0-fpm-stretch
 MAINTAINER Christopher Westerfield <chris@mjr.one>
 
 RUN apt-get update && \
