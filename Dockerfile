@@ -1,4 +1,4 @@
-FROM php:7.0.27-fpm-jessie
+FROM php:7.1.14-fpm-jessie
 MAINTAINER Christopher Westerfield <chris@mjr.one>
 
 RUN apt-get update && \
