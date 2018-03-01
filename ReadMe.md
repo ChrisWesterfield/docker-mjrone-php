@@ -1,4 +1,4 @@
-PHP 7.1.14
+PHP 7.2.2
 SLIM
 includes the following extensions:
 

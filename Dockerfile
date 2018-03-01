@@ -1,4 +1,4 @@
-FROM php:7.1.14-fpm-jessie
+FROM php:7.2.2-fpm-stretch
 MAINTAINER Christopher Westerfield <chris@mjr.one>
 
 RUN apt-get update && \
