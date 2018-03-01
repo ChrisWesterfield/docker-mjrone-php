@@ -12,14 +12,49 @@ RUN apt-get update && \
         tesseract-ocr \
         tesseract-ocr-eng \
         tesseract-ocr-deu \
-        tesseract-ocr-deu-frak && \
+        tesseract-ocr-deu-frak
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libmcrypt-dev \
+        libpng12-dev && \
     rm /etc/localtime && \
     ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
-    docker-php-ext-install pdo pdo_mysql shmop && \
+    docker-php-ext-install pdo pdo_mysql pdo_pgsql shmop && \
+    pecl install mongodb-1.2.2 && \
+    pecl install mongo && \
     docker-php-ext-install pcntl && \
     pecl install redis-3.1.1 && \
     docker-php-ext-enable redis && \
     docker-php-ext-install opcache && \
+    docker-php-ext-install bcmath && \
+    docker-php-ext-install zip && \
+    docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/  && \
+    docker-php-ext-install gd && \
+    docker-php-ext-install ftp && \
+    docker-php-ext-install fileinfo && \
+    docker-php-ext-install hash && \
+    docker-php-ext-install imap && \
+    docker-php-ext-install intl && \
+    docker-php-ext-install json && \
+    docker-php-ext-install iconv && \
+    docker-php-ext-install mbstring && \
+    docker-php-ext-install json && \
+    docker-php-ext-install ldap && \
+    docker-php-ext-install phar && \
+    docker-php-ext-install pgsql && \
+    docker-php-ext-install session && \
+    docker-php-ext-install simplexml && \
+    docker-php-ext-install soap && \
+    docker-php-ext-install sockets && \
+    docker-php-ext-install tidy && \
+    docker-php-ext-install xml && \
+    docker-php-ext-install xmlreader && \
+    docker-php-ext-install xmlwriter && \
+    docker-php-ext-install xmlrpc && \
+    docker-php-ext-install xsl && \
+    docker-php-ext-install spl && \
+    echo "extension=mongodb.so" >> /usr/local/etc/php/conf.d/mongodb.ini && \
+    echo "extension=mongo.so" >> /usr/local/etc/php/conf.d/mongo.ini && \
     echo "opcache.memory_consumption = 256" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
     echo "opcache.max_accelerated_files = 30000" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
     echo "opcache.enable_cli = On" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \

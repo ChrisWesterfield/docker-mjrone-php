@@ -1,4 +1,4 @@
-PHP 7.2.0 RC3
+PHP 5.6.33
 SLIM
 includes the following extensions:
 
