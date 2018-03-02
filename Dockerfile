@@ -12,7 +12,7 @@ RUN apt-get update && \
         tesseract-ocr \
         tesseract-ocr-eng \
         tesseract-ocr-deu \
-        tesseract-ocr-deu-frak
+        tesseract-ocr-deu-frak \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libmcrypt-dev \
