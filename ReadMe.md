@@ -10,8 +10,23 @@ includes the following extensions:
 - opcache
 - xdebug
 - blackfire
+- pdo_pgsql
+- xhprof/tideways
+- gd
+- ftp
+- fileinfo
+- imap
+- json
+- mbstring
+- ldap
+- phar
+- tidy
+- sockets
+- xmlrpc
+- xsl
+- mongodb
+- zray
 
-and more
 
 also includes the following apt installed packages:
 
