@@ -20,6 +20,13 @@ RUN apt-get update && \
         libssl-dev \
         libpcre3-dev \
         libpng-dev \
+        libxml2-dev \
+        libxslt1-dev \
+        libkrb5-dev \
+        libicu-dev \
+        libldap2-dev \
+        ibtidy-dev \
+        wget \
         libc-client2007e-dev && \
     rm /etc/localtime && \
     ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
@@ -38,8 +45,6 @@ RUN apt-get update && \
     docker-php-ext-install ftp && \
     docker-php-ext-install fileinfo && \
     docker-php-ext-install hash && \
-    apt-get install -y libkrb5-dev && \
-    apt-get install -y libicu-dev libldap2-dev && \
     docker-php-ext-configure imap --with-kerberos  --with-imap-ssl && \
     docker-php-ext-install imap && \
     docker-php-ext-install intl && \
@@ -51,9 +56,7 @@ RUN apt-get update && \
     docker-php-ext-install phar && \
     docker-php-ext-install pgsql && \
     docker-php-ext-install session && \
-    apt-get install -y libxml2-dev libxslt1-dev && \
     docker-php-ext-install simplexml && \
-    apt-get install -y libtidy-dev && \
     docker-php-ext-install soap && \
     docker-php-ext-install sockets && \
     docker-php-ext-install tidy && \
@@ -105,13 +108,12 @@ RUN apt-get update && \
     echo "extension=tideways_xhprof.so"  >> /usr/local/etc/php/conf.d/docker-php-ext-profiler.ini && \
     echo "tideways.auto_prepend_library=0ph"  >> /usr/local/etc/php/conf.d/docker-php-ext-profiler.ini && \
     docker-php-ext-enable  tideways_xhprof && \
-    apt-get install wget && \
     wget http://repos.zend.com/zend-server/early-access/ZRay-Homestead/zray-standalone-php72.tar.gz -O - | tar -xzf - -C /opt && \
     ln -sf /opt/zray/zray.ini /usr/local/etc/php/conf.d/docker-php-ext-zray.ini && \
     ln -sf /opt/zray/zray.ini /usr/local/etc/php/conf.d/docker-php-ext-zray.ini && \
     ln -sf /opt/zray/lib/zray.so /usr/local/lib/php/extensions/no-debug-non-zts-20170718/zray.so && \
     chown -R www-data:www-data /opt/zray && \
-    apt-get purge git cpp openssh-server openssh-client m4 patch exim* perl  -y && \
+    apt-get purge git cpp openssh-server openssh-client m4 patch exim* perl wget -y && \
     apt-get autoremove -y && \
     apt-get autoclean && \
     rm -Rf /usr/src/* && \
