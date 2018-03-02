@@ -16,11 +16,24 @@ RUN apt-get update && \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libmcrypt-dev \
-        libpng12-dev && \
+        libpq-dev \
+        libssl-dev \
+        libpcre3-dev \
+        libpng-dev \
+        libxml2-dev \
+        libxslt1-dev \
+        libkrb5-dev \
+        libicu-dev \
+        libldap2-dev \
+        ibtidy-dev \
+        wget \
+        libc-client2007e-dev && \
     rm /etc/localtime && \
     ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
-    docker-php-ext-install pdo pdo_mysql pdo_pgsql shmop && \
-    pecl install mongodb-1.2.2 && \
+    docker-php-ext-install pdo && \
+    docker-php-ext-install pdo_mysql && \
+    docker-php-ext-install pdo_pgsql && \
+    docker-php-ext-install shmop && \
     docker-php-ext-install pcntl && \
     pecl install redis-3.1.1 && \
     docker-php-ext-enable redis && \
@@ -32,12 +45,13 @@ RUN apt-get update && \
     docker-php-ext-install ftp && \
     docker-php-ext-install fileinfo && \
     docker-php-ext-install hash && \
+    docker-php-ext-configure imap --with-kerberos  --with-imap-ssl && \
     docker-php-ext-install imap && \
     docker-php-ext-install intl && \
     docker-php-ext-install json && \
     docker-php-ext-install iconv && \
     docker-php-ext-install mbstring && \
-    docker-php-ext-install json && \
+    docker-php-ext-configure ldap  --with-libdir=lib/x86_64-linux-gnu/ && \
     docker-php-ext-install ldap && \
     docker-php-ext-install phar && \
     docker-php-ext-install pgsql && \
@@ -46,12 +60,9 @@ RUN apt-get update && \
     docker-php-ext-install soap && \
     docker-php-ext-install sockets && \
     docker-php-ext-install tidy && \
-    docker-php-ext-install xml && \
-    docker-php-ext-install xmlreader && \
-    docker-php-ext-install xmlwriter && \
     docker-php-ext-install xmlrpc && \
     docker-php-ext-install xsl && \
-    docker-php-ext-install spl && \
+    pecl install mongodb && \
     echo "extension=mongodb.so" >> /usr/local/etc/php/conf.d/mongodb.ini && \
     echo "opcache.memory_consumption = 256" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
     echo "opcache.max_accelerated_files = 30000" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
@@ -61,11 +72,11 @@ RUN apt-get update && \
     echo "opcache.file_cache_consistency_checks=1" >>  /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
     echo "opcache.fast_shutdown=1" >>  /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
     docker-php-ext-enable opcache && \
-    version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
-    && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/linux/amd64/$version \
-    && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp \
-    && mv /tmp/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
-    && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8707\n" > $PHP_INI_DIR/conf.d/blackfire.ini && \
+    version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") && \
+    curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/linux/amd64/$version && \
+    tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp && \
+    mv /tmp/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so  && \
+    printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8707\n" > $PHP_INI_DIR/conf.d/blackfire.ini && \
     cd /usr/src && \
     git clone git://github.com/xdebug/xdebug.git && \
     cd /usr/src/xdebug && \
@@ -87,7 +98,17 @@ RUN apt-get update && \
     echo "xdebug.remote_connect_back = 1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
     echo "xdebug.profiler_enable = 0" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
     echo "xdebug.remote_host = 10.254.254.254" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
-    apt-get purge git cpp openssh-server openssh-client m4 patch exim* perl  -y && \
+    cd /usr/src && \
+    git clone https://github.com/tideways/php-profiler-extension.git && \
+    cd php-profiler-extension && \
+    phpize && \
+    ./configure && \
+    make && \
+    make install && \
+    echo "extension=tideways_xhprof.so"  >> /usr/local/etc/php/conf.d/docker-php-ext-profiler.ini && \
+    echo "tideways.auto_prepend_library=0ph"  >> /usr/local/etc/php/conf.d/docker-php-ext-profiler.ini && \
+    docker-php-ext-enable  tideways_xhprof && \
+    apt-get purge git cpp openssh-server openssh-client m4 patch exim* perl wget -y && \
     apt-get autoremove -y && \
     apt-get autoclean && \
     rm -Rf /usr/src/* && \
