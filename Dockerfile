@@ -16,6 +16,7 @@ RUN apt-get update && \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libmcrypt-dev \
+        libpq-dev \
         libpng12-dev && \
     rm /etc/localtime && \
     ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
