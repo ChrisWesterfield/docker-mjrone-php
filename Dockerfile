@@ -25,7 +25,7 @@ RUN apt-get update && \
         libkrb5-dev \
         libicu-dev \
         libldap2-dev \
-        ibtidy-dev \
+        libtidy-dev \
         wget \
         libc-client2007e-dev && \
     rm /etc/localtime && \
