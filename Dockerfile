@@ -124,10 +124,6 @@ RUN apt-get update && \
     echo "extension=tideways_xhprof.so"  >> /usr/local/etc/php/conf.d/docker-php-ext-profiler.ini && \
     echo "tideways.auto_prepend_library=0ph"  >> /usr/local/etc/php/conf.d/docker-php-ext-profiler.ini && \
     docker-php-ext-enable  tideways_xhprof && \
-    wget http://repos.zend.com/zend-server/early-access/ZRay-Homestead/zray-standalone-php72.tar.gz -O - | tar -xzf - -C /opt && \
-    ln -sf /opt/zray/zray.ini /usr/local/etc/php/conf.d/docker-php-ext-zray.ini && \
-    ln -sf /opt/zray/zray.ini /usr/local/etc/php/conf.d/docker-php-ext-zray.ini && \
-    ln -sf /opt/zray/lib/zray.so /usr/local/lib/php/extensions/no-debug-non-zts-20170718/zray.so && \
     chown -R www-data:www-data /opt/zray && \
     apt-get purge git cpp openssh-server openssh-client m4 patch exim* perl wget -y && \
     apt-get autoremove -y && \
