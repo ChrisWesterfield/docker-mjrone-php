@@ -124,7 +124,6 @@ RUN apt-get update && \
     echo "extension=tideways_xhprof.so"  >> /usr/local/etc/php/conf.d/docker-php-ext-profiler.ini && \
     echo "tideways.auto_prepend_library=0ph"  >> /usr/local/etc/php/conf.d/docker-php-ext-profiler.ini && \
     docker-php-ext-enable  tideways_xhprof && \
-    chown -R www-data:www-data /opt/zray && \
     apt-get purge git cpp openssh-server openssh-client m4 patch exim* perl wget -y && \
     apt-get autoremove -y && \
     apt-get autoclean && \
