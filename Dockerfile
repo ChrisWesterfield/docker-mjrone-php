@@ -27,6 +27,10 @@ RUN apt-get update && \
         libldap2-dev \
         libtidy-dev \
         wget \
+        libyaml-dev \
+        libevent-dev \
+        libmemcached-dev \
+        librabbitmq-dev \
         libc-client2007e-dev && \
     rm /etc/localtime && \
     ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
@@ -63,7 +67,19 @@ RUN apt-get update && \
     docker-php-ext-install xmlrpc && \
     docker-php-ext-install xsl && \
     pecl install mongodb && \
-    echo "extension=mongodb.so" >> /usr/local/etc/php/conf.d/mongodb.ini && \
+    pecl install  amqp && \
+    pecl install  memcached && \
+    pecl install  yaml-2.0.2 && \
+    cd /usr/src && \
+    git clone https://github.com/websupport-sk/pecl-memcache.git php-memcached && \
+    cd php-memcached && \
+    git checkout php7 && \
+    phpize && \
+    ./configure && \
+    make && \
+    make install && \
+    echo "extension=memcache.so" > /usr/local/etc/php/conf.d/docker-php-ext-memcache && \
+    docker-php-ext-enable memcache && \
     echo "opcache.memory_consumption = 256" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
     echo "opcache.max_accelerated_files = 30000" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
     echo "opcache.enable_cli = On" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
